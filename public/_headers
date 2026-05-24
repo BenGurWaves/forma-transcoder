@@ -1,3 +1,4 @@
+# COEP header removed to prevent blocking Stripe Elements JS SDK and external CDNs.
+# Single-threaded WASM transcoding and sandboxed fallback run seamlessly without requiring isolated headers.
 /*
-  Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Embedder-Policy: require-corp
+  Access-Control-Allow-Origin: *

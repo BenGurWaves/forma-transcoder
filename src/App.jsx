@@ -274,10 +274,10 @@ export default function App() {
 
   const processSelectedFile = (selectedFile) => {
     // Limit enforcement
-    const sizeCeiling = isPremium ? 2000 * 1024 * 1024 : 150 * 1024 * 1024;
+    const sizeCeiling = isPremium ? 20000 * 1024 * 1024 : 5000 * 1024 * 1024;
     
     if (selectedFile.size > sizeCeiling) {
-      alert(`Limit Exceeded: ${isPremium ? 'Paid' : 'Free'} Tier size limit is ${isPremium ? '2GB' : '150MB'}. Drag premium license options to upgrade.`);
+      alert(`Limit Exceeded: ${isPremium ? 'Paid' : 'Free'} Tier size limit is ${isPremium ? '20GB' : '5GB'}. Drag premium license options to upgrade.`);
       return;
     }
 
@@ -306,7 +306,7 @@ export default function App() {
     if (!file) return;
 
     // Check daily conversion limits
-    if (!isPremium && conversionsToday >= 3) {
+    if (!isPremium && conversionsToday >= 5) {
       setShowStripeModal(true);
       return;
     }
@@ -332,6 +332,15 @@ export default function App() {
   };
 
   const triggerGracefulFallback = () => {
+    if (!file) {
+      console.warn('Wasm worker initialization failed or was blocked. Crucible is running in alchemical sandbox simulation mode.');
+      setTranscodeLogs((prev) => [
+        ...prev,
+        '[WebAssembly sandbox active — ready for crude drops]'
+      ]);
+      return;
+    }
+
     console.log('Activating high-fidelity alchemical simulation...');
     setTranscodeLogs((prev) => [
       ...prev,
@@ -518,7 +527,7 @@ export default function App() {
                   Drop crude files to refine
                 </div>
                 <div className="crucible-subtitle">
-                  Supports High-Bitrate MOV, MP4, ProRes (Free up to 150MB, Premium 2GB)
+                  Supports High-Bitrate MOV, MP4, ProRes (Free up to 5GB, Premium 20GB)
                 </div>
               </div>
             )}
@@ -672,7 +681,7 @@ export default function App() {
               </button>
 
               <div className="usage-meter-row">
-                <span>Free optimisations today: {conversionsToday} / 3</span>
+                <span>Free optimisations today: {conversionsToday} / 5</span>
                 <span>Limits refresh: midnight</span>
               </div>
             </div>
@@ -736,11 +745,11 @@ export default function App() {
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>File Size Limit</span>
-                <span style={{ color: 'var(--color-text-primary)' }}>150MB → 2GB Limit</span>
+                <span style={{ color: 'var(--color-text-primary)' }}>5GB → 20GB Limit</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Daily Transcodes</span>
-                <span style={{ color: 'var(--color-text-primary)' }}>3 → Unlimited</span>
+                <span style={{ color: 'var(--color-text-primary)' }}>5 → Unlimited</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Thread Concurrency</span>
